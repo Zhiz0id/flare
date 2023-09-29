@@ -23,10 +23,8 @@ Summary:        Free Libre Action Roleplaying Engine
 License:        (CC-BY-SA-3.0 OR CC-BY-SA-4.0) AND GPL-3.0-or-later
 Group:          Amusements/Games/RPG
 URL:            https://flarerpg.org
-#Source0:        https://github.com/flareteam/flare-game/releases/download/v1.14/flare-engine-v1.14.tar.gz
-Source0:        %{name}-engine-v%{version}.tar.gz
-#Source1:        https://github.com/flareteam/flare-game/releases/download/v1.14/flare-game-v1.14.tar.gz
-Source1:        %{name}-game-v%{version}.tar.gz
+Source0:        https://github.com/flareteam/flare-game/releases/download/v%{version}/${name}-engine-v${version}.tar.gz
+Source1:        https://github.com/flareteam/flare-game/releases/download/v%{version}/${name}-game-v${version}.tar.gz
 BuildRequires:  cmake
 BuildRequires:  fdupes
 BuildRequires:  gcc-c++
@@ -49,11 +47,13 @@ Flare uses .ini-style config files for most of the
 game data to modify game contents. The game code is C++.
 
 %prep
+wget -nc %{SOURCE0}
 if [ ! -d %{name}-engine-v%{version} ]; then
-  tar xzf %{SOURCE0}
+  tar xzf {name}-engine-v%{version}
 fi
+wget -nc ${SOURCE1}
 if [ ! -d %{name}-game-v%{version} ]; then
-  tar xzf %{SOURCE1}
+  tar xzf %{name}-game-v%{version}
 fi
 
 
@@ -62,7 +62,8 @@ fi
     -DBINDIR="bin" \
     -DDATADIR="share/flare" \
     -DCMAKE_BUILD_TYPE="Release" \
-    -DCMAKE_INSTALL_PREFIX="%{_prefix}"
+    -DCMAKE_INSTALL_PREFIX="%{_prefix}" \
+    %{name}-engine-v%{version}
 %cmake_build
 
 %install
