@@ -16,15 +16,19 @@
 #
 
 
-Name:           flare
+Name:           info.you_ra.flare
 Version:        1.14
 Release:        0
 Summary:        Free Libre Action Roleplaying Engine
 License:        (CC-BY-SA-3.0 OR CC-BY-SA-4.0) AND GPL-3.0-or-later
 Group:          Amusements/Games/RPG
 URL:            https://flarerpg.org
-Source0:        https://github.com/flareteam/flare-game/releases/download/v%{version}/${name}-engine-v${version}.tar.gz
-Source1:        https://github.com/flareteam/flare-game/releases/download/v%{version}/${name}-game-v${version}.tar.gz
+Source0:        https://github.com/flareteam/flare-game/releases/download/v%{version}/%{name}-engine-v%{version}.tar.gz
+Source1:        https://github.com/flareteam/flare-game/releases/download/v%{version}/%{name}-game-v%{version}.tar.gz
+Patch0:         flare-engine-1.14-settings.patch
+Patch1:         flare-engine-1.14-desktop.patch
+Patch2:         flare-engine-1.14-cmake.patch
+Patch3:         flare-engine-1.14-platformlinux.patch
 BuildRequires:  cmake
 BuildRequires:  fdupes
 BuildRequires:  gcc-c++
@@ -33,6 +37,9 @@ BuildRequires:  vim
 BuildRequires:  pkgconfig(SDL2_image)
 BuildRequires:  pkgconfig(SDL2_mixer)
 BuildRequires:  pkgconfig(SDL2_ttf)
+BuildRequires:  librsvg-tools
+
+%define _unpackaged_files_terminate_build 0
 
 %description
 Flare (Free Libre Action Roleplaying Engine) is a game engine built
@@ -47,36 +54,57 @@ Flare uses .ini-style config files for most of the
 game data to modify game contents. The game code is C++.
 
 %prep
-wget -nc %{SOURCE0}
-if [ ! -d %{name}-engine-v%{version} ]; then
-  tar xzf {name}-engine-v%{version}
+if [ ! -d flare-engine-v%{version} ]; then
+  curl -O -L https://github.com/flareteam/flare-game/releases/download/v%{version}/flare-engine-v%{version}.tar.gz
+  tar xzf flare-engine-v%{version}.tar.gz
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 fi
-wget -nc ${SOURCE1}
-if [ ! -d %{name}-game-v%{version} ]; then
-  tar xzf %{name}-game-v%{version}
+if [ ! -d flare-game-v%{version} ]; then
+  curl -O -L https://github.com/flareteam/flare-game/releases/download/v%{version}/flare-game-v%{version}.tar.gz
+  tar xzf flare-game-v%{version}.tar.gz
 fi
-
 
 %build
 %cmake \
     -DBINDIR="bin" \
-    -DDATADIR="share/flare" \
+    -DDATADIR="share/%{name}" \
+    -DMANDIR="share/%{name}/man" \
     -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX="%{_prefix}" \
-    %{name}-engine-v%{version}
-%cmake_build
-
+    flare-engine-v%{version}
+%make_build
+if test -f %{name} ; then strip %{name}; fi
+for sz in 86 108 128 172; do \
+    rsvg-convert \
+    --width=${sz} \
+    --height=${sz} \
+    --output "${sz}x${sz}.png" \
+    flare-engine-v%{version}/distribution/flare_logo_icon.svg; \
+    done
+cd flare-game-v%{version} && /usr/bin/cmake \
+    -DDATADIR="share/%{name}" \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_INSTALL_PREFIX="%{_prefix}" \
+    .
 %install
-%cmake_install
-%fdupes -s %{buildroot}/%{_prefix}
+%make_install
+mkdir -p "/home/deploy/installroot/usr/share/icons/hicolor/86x86/apps"
+install -m 644 -p "86x86.png" "/home/deploy/installroot/usr/share/icons/hicolor/86x86/apps/%{name}.png"
+mkdir -p "/home/deploy/installroot/usr/share/icons/hicolor/108x108/apps"
+install -m 644 -p "108x108.png" "/home/deploy/installroot/usr/share/icons/hicolor/108x108/apps/%{name}.png"
+mkdir -p "/home/deploy/installroot/usr/share/icons/hicolor/128x128/apps"
+install -m 644 -p "128x128.png" "/home/deploy/installroot/usr/share/icons/hicolor/128x128/apps/%{name}.png"
+mkdir -p "/home/deploy/installroot/usr/share/icons/hicolor/172x172/apps"
+install -m 644 -p "172x172.png" "/home/deploy/installroot/usr/share/icons/hicolor/172x172/apps/%{name}.png"
+cd flare-game-v%{version} && /usr/bin/make DATADIR="/usr/share/%{name}" DESTDIR=/home/deploy/installroot INSTALL_ROOT=/home/deploy/installroot install
 
 %files
-%license COPYING
-%doc README* RELEASE_NOTES.txt
 %{_bindir}/%{name}
-%{_mandir}/man*/%{name}.*
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog

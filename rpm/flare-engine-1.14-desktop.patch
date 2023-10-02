@@ -1,0 +1,31 @@
+--- a/flare-engine-v1.14/distribution/flare.desktop.in.orig	2022-12-10 21:17:12.000000000 +0300
++++ a/flare-engine-v1.14/distribution/flare.desktop.in	2023-10-02 02:20:46.539593069 +0300
+@@ -1,21 +1,13 @@
+ [Desktop Entry]
+ Version=1.0
+ Type=Application
++X-Nemo-Application-Type=generic
+ Name=Flare
+-GenericName=Flare (Action Role-Playing Game)
+-GenericName[de]=Flare (Action-Rollenspiel)
+-GenericName[fr]=Flare (Jeu de rôle d'action)
+-GenericName[gl]=Xogo de acción e rol
+-GenericName[ru]=Flare (ролевая игра)
+-GenericName[uk]=Flare (рольовий екшн або Action/RPG)
+-Comment=A single player, 2D-isometric, action Role-Playing Game
+-Comment[de]=Ein einzelspieler 2D-isometrisches Action-Rollenspiel
+-Comment[fr]=Un jeu de rôle d'action monojoueur en 2D isométrique
+-Comment[gl]=Xogo individual de acción e rol cunha vista isométrica en dúas dimensións.
+-Comment[ru]=Изометрический ролевой боевик для одного игрока
+-Comment[uk]=Ізометричний рольовий екшн (Action/RPG) для одного гравця
+ TryExec=@FLARE_EXECUTABLE_PATH@
+ Exec=@FLARE_EXECUTABLE_PATH@
+ Categories=Game;RolePlaying;
+-Icon=flare
++Icon=info.you_ra.flare
+-Terminal=false
++[X-Application]
++Permissions=UserDirs;Audio
++OrganizationName=info.you_ra
++ApplicationName=flare
+

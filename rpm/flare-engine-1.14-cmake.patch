@@ -1,0 +1,61 @@
+--- a/flare-engine-v1.14/CMakeLists.txt	2022-12-10 21:17:12.000000000 +0300
++++ a/flare-engine-v1.14/CMakeLists.txt	2023-10-02 15:12:34.297226480 +0300
+@@ -60,9 +60,9 @@
+ set(MANDIR  "share/man"         CACHE STRING "Directory from CMAKE_INSTALL_PREFIX where manual pages will be installed.")
+ 
+ If(NOT IS_ABSOLUTE "${BINDIR}")
+-	set(FLARE_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/${BINDIR}/flare)
++	set(FLARE_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/${BINDIR}/info.you_ra.flare)
+ Else(NOT IS_ABSOLUTE "${BINDIR}")
+-	set(FLARE_EXECUTABLE_PATH ${BINDIR}/flare)
++	set(FLARE_EXECUTABLE_PATH ${BINDIR}/info.you_ra.flare)
+ EndIf(NOT IS_ABSOLUTE "${BINDIR}")
+ 
+ If(NOT IS_ABSOLUTE "${DATADIR}")
+@@ -74,11 +74,11 @@
+ 
+ # desktop file
+ If(NOT IS_ABSOLUTE "${BINDIR}")
+-	set(FLARE_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/${BINDIR}/flare)
++	set(FLARE_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/${BINDIR}/info.you_ra.flare)
+ Else(NOT IS_ABSOLUTE "${BINDIR}")
+-	set(FLARE_EXECUTABLE_PATH ${BINDIR}/flare)
++	set(FLARE_EXECUTABLE_PATH ${BINDIR}/info.you_ra.flare)
+ EndIf(NOT IS_ABSOLUTE "${BINDIR}")
+-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/distribution/flare.desktop.in" "${CMAKE_CURRENT_BINARY_DIR}/flare.desktop")
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/distribution/flare.desktop.in" "${CMAKE_CURRENT_BINARY_DIR}/info.you_ra.flare.desktop")
+ 
+ 
+ # Detect missing dependencies
+@@ -355,19 +355,19 @@
+ 	)
+ ENDIF (WIN32)
+ 
++Add_Executable (info.you_ra.flare ${FLARE_SOURCES} ${FLARE_HEADERS})
+-Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
+ 
+ # libSDLMain comes with libSDL if needed on certain platforms
+ If (NOT SDL2MAIN_LIBRARY)
+ 	Set (SDL2MAIN_LIBRARY "")
+ EndIf (NOT SDL2MAIN_LIBRARY)
+ 
+-Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY})
++Target_Link_Libraries (info.you_ra.flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY})
+ 
+ 
+ # installing to the proper places
+ install(PROGRAMS
+-	${CMAKE_CURRENT_BINARY_DIR}/flare
++	${CMAKE_CURRENT_BINARY_DIR}/info.you_ra.flare
+ 	DESTINATION ${BINDIR})
+ install(DIRECTORY
+ 	"${CMAKE_CURRENT_SOURCE_DIR}/mods"
+@@ -377,7 +377,7 @@
+ 	DESTINATION ${MANDIR}/man6
+ 	RENAME flare.6)
+ install(FILES
+-	"${CMAKE_CURRENT_BINARY_DIR}/flare.desktop"
++	"${CMAKE_CURRENT_BINARY_DIR}/info.you_ra.flare.desktop"
+ 	DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+ install(FILES
+ 	"${CMAKE_CURRENT_SOURCE_DIR}/distribution/flare_logo_icon.svg"

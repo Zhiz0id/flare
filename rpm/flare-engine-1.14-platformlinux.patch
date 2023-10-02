@@ -1,0 +1,45 @@
+--- a/flare-engine-v1.14.orig/src/PlatformLinux.cpp	2022-12-10 21:17:12.000000000 +0300
++++ a/flare-engine-v1.14/src/PlatformLinux.cpp	2023-10-02 15:49:45.887528006 +0300
+@@ -63,13 +63,13 @@
+ 	// set config path (settings, keybindings)
+ 	// $XDG_CONFIG_HOME/flare/
+ 	if (getenv("XDG_CONFIG_HOME") != NULL) {
+-		settings->path_conf = std::string(getenv("XDG_CONFIG_HOME")) + "/flare/";
++		settings->path_conf = std::string(getenv("XDG_CONFIG_HOME")) + "/info.you_ra/flare/";
+ 	}
+ 	// $HOME/.config/flare/
+ 	else if (getenv("HOME") != NULL) {
+ 		settings->path_conf = std::string(getenv("HOME")) + "/.config/";
+ 		Filesystem::createDir(settings->path_conf);
+-		settings->path_conf += "flare/";
++		settings->path_conf += "info.you_ra/flare/";
+ 	}
+ 	// ./config/
+ 	else {
+@@ -81,7 +81,7 @@
+ 	// set user path (save games)
+ 	// $XDG_DATA_HOME/flare/
+ 	if (getenv("XDG_DATA_HOME") != NULL) {
+-		settings->path_user = std::string(getenv("XDG_DATA_HOME")) + "/flare/";
++		settings->path_user = std::string(getenv("XDG_DATA_HOME")) + "/info.you_ra.flare/";
+ 	}
+ 	// $HOME/.local/share/flare/
+ 	else if (getenv("HOME") != NULL) {
+@@ -89,7 +89,7 @@
+ 		Filesystem::createDir(settings->path_user);
+ 		settings->path_user += "share/";
+ 		Filesystem::createDir(settings->path_user);
+-		settings->path_user += "flare/";
++		settings->path_user += "info.you_ra.flare/";
+ 	}
+ 	// ./saves/
+ 	else {
+@@ -136,7 +136,7 @@
+ 		pathtest = Parse::popFirstString(pathlist,':');
+ 		while (pathtest != "") {
+ 			if (!path_data) {
+-				settings->path_data = pathtest + "/flare/";
++				settings->path_data = pathtest + "/info.you_ra.flare/";
+ 				if (Filesystem::pathExists(settings->path_data)) path_data = true;
+ 			}
+ 			if (path_data) break;
